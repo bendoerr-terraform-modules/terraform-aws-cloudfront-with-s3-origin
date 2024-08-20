@@ -3,15 +3,16 @@ package test_test
 import (
 	"context"
 	"fmt"
-	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/service/cloudfront"
-	"github.com/gruntwork-io/terratest/modules/random"
 	"io"
 	"net/http"
 	"os"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/cloudfront"
+	"github.com/gruntwork-io/terratest/modules/random"
 
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
@@ -57,7 +58,7 @@ func TestDefaults(t *testing.T) {
 
 	// Upload two test files to the S3 bucket
 	s3Client := s3.NewFromConfig(cfg)
-	bucketId := terraform.Output(t, terraformOptions, "s3_bucket_id")
+	bucketID := terraform.Output(t, terraformOptions, "s3_bucket_id")
 
 	indexTxt := random.UniqueId()
 	testTxt := random.UniqueId()
@@ -65,7 +66,7 @@ func TestDefaults(t *testing.T) {
 	_, err = s3Client.PutObject(
 		context.Background(),
 		&s3.PutObjectInput{
-			Bucket: aws.String(bucketId),
+			Bucket: aws.String(bucketID),
 			Key:    aws.String("index.html"),
 			Body:   strings.NewReader(indexTxt),
 		},
@@ -74,7 +75,7 @@ func TestDefaults(t *testing.T) {
 		_, _ = s3Client.DeleteObject(
 			context.Background(),
 			&s3.DeleteObjectInput{
-				Bucket: aws.String(bucketId),
+				Bucket: aws.String(bucketID),
 				Key:    aws.String("index.html"),
 			})
 		t.Log("deleted index.html")
@@ -86,7 +87,7 @@ func TestDefaults(t *testing.T) {
 	_, err = s3Client.PutObject(
 		context.Background(),
 		&s3.PutObjectInput{
-			Bucket: aws.String(bucketId),
+			Bucket: aws.String(bucketID),
 			Key:    aws.String("test.txt"),
 			Body:   strings.NewReader(testTxt),
 		},
@@ -95,7 +96,7 @@ func TestDefaults(t *testing.T) {
 		_, _ = s3Client.DeleteObject(
 			context.Background(),
 			&s3.DeleteObjectInput{
-				Bucket: aws.String(bucketId),
+				Bucket: aws.String(bucketID),
 				Key:    aws.String("test.txt"),
 			})
 		t.Log("deleted test.txt")
@@ -106,17 +107,17 @@ func TestDefaults(t *testing.T) {
 
 	// Ensure that the distribution is ready
 	cloudfrontClient := cloudfront.NewFromConfig(cfg)
-	cloudfrontId := terraform.Output(t, terraformOptions, "cloudfront_distribution_id")
+	cloudfrontID := terraform.Output(t, terraformOptions, "cloudfront_distribution_id")
 
 	ready := false
 
 	// Wait 10 Minutes max
 	for wait := 0; wait < 60; wait++ {
-		output, err := cloudfrontClient.GetDistribution(context.Background(), &cloudfront.GetDistributionInput{
-			Id: aws.String(cloudfrontId),
+		output, lerr := cloudfrontClient.GetDistribution(context.Background(), &cloudfront.GetDistributionInput{
+			Id: aws.String(cloudfrontID),
 		})
-		if err != nil {
-			t.Fatal(err)
+		if lerr != nil {
+			t.Fatal(lerr)
 		}
 
 		t.Log("Current distribution status: " + *output.Distribution.Status)
@@ -175,7 +176,7 @@ func makediff(want interface{}, got interface{}) string {
 	s := fmt.Sprintf("\nwant: %# v", pretty.Formatter(want))
 	s = fmt.Sprintf("%s\ngot: %# v", s, pretty.Formatter(got))
 	diffs := pretty.Diff(want, got)
-	s = fmt.Sprintf("%s\ndifferences: ", s)
+	s += "\ndifferences: "
 	for _, d := range diffs {
 		s = fmt.Sprintf("%s\n  - %s", s, d)
 	}
