@@ -15,3 +15,24 @@ variable "context" {
   })
   description = "Shared Context from Ben's terraform-null-context"
 }
+
+variable "s3_kms_key_arn" {
+  type        = string
+  default     = null
+  description = "TODO"
+  nullable    = true
+}
+
+variable "default_root_object" {
+  type        = string
+  default     = "index.html"
+  description = "TODO"
+  nullable    = true
+}
+
+variable "cname_aliases" {
+  type        = set(string)
+  default     = null
+  description = "TODO"
+  nullable    = true
+}
