@@ -72,13 +72,18 @@ func TestDefaults(t *testing.T) {
 		},
 	)
 	defer func() {
-		_, _ = s3Client.DeleteObject(
+		_, derr := s3Client.DeleteObject(
 			context.Background(),
 			&s3.DeleteObjectInput{
 				Bucket: aws.String(bucketID),
 				Key:    aws.String("index.html"),
 			})
-		t.Log("deleted index.html")
+		if derr != nil {
+			t.Log("failed to delete index.html")
+			t.Log(derr)
+		} else {
+			t.Log("deleted index.html")
+		}
 	}()
 	if err != nil {
 		t.Fatal(err)
@@ -93,13 +98,18 @@ func TestDefaults(t *testing.T) {
 		},
 	)
 	defer func() {
-		_, _ = s3Client.DeleteObject(
+		_, derr := s3Client.DeleteObject(
 			context.Background(),
 			&s3.DeleteObjectInput{
 				Bucket: aws.String(bucketID),
 				Key:    aws.String("test.txt"),
 			})
-		t.Log("deleted test.txt")
+		if derr != nil {
+			t.Log("failed to delete test.txt")
+			t.Log(derr)
+		} else {
+			t.Log("deleted test.txt")
+		}
 	}()
 	if err != nil {
 		t.Fatal(err)
