@@ -16,6 +16,13 @@ variable "context" {
   description = "Shared Context from Ben's terraform-null-context"
 }
 
+variable "name" {
+  type        = string
+  default     = "site"
+  description = "TODO"
+  nullable    = false
+}
+
 variable "s3_kms_key_arn" {
   type        = string
   default     = null
@@ -30,9 +37,21 @@ variable "default_root_object" {
   nullable    = true
 }
 
-variable "cname_aliases" {
-  type        = set(string)
-  default     = null
-  description = "A set of CNAME aliases for the S3 bucket."
-  nullable    = true
+variable "domain_zone_name" {
+  type        = string
+  description = "If setting a custom CNAME for the Cloudfront distribution this is the domain name for the zone."
+  nullable    = false
+}
+
+variable "domain_zone_id" {
+  type        = string
+  description = "If setting a custom CNAME for the Cloudfront distribution this is the domain name for the zone."
+  nullable    = false
+}
+
+variable "extra_domain_prefixes" {
+  type        = list(string)
+  default     = []
+  description = "Custom domains"
+  nullable    = false
 }

@@ -6,8 +6,8 @@ name = "secrets"
 [[analyzers]]
 name = "terraform"
 
-#[[analyzers]]
-#name = "go"
-#
-#  [analyzers.meta]
-#  import_root = "github.com/bendoerr-terraform-modules/terraform-aws-cloudfront-with-s3-origin/test"
+[[analyzers]]
+name = "go"
+
+  [analyzers.meta]
+  import_root = "github.com/bendoerr-terraform-modules/terraform-aws-cloudfront-and-s3-origin/test"

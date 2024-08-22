@@ -145,40 +145,44 @@ func TestDefaults(t *testing.T) {
 	}
 
 	// Make test HTTPS requests
-	domainName := terraform.Output(t, terraformOptions, "cloudfront_distribution_domain_name")
+	defaultDomainName := terraform.Output(t, terraformOptions, "cloudfront_distribution_domain_name")
+	aliasDomainName := terraform.Output(t, terraformOptions, "cloudfront_distribution_alias_domain_name")
+	names := []string{defaultDomainName, aliasDomainName}
 
-	// Test the / default
-	resp, err := http.Get(fmt.Sprintf("https://%s/", domainName))
-	if err != nil {
-		t.Fatal(err)
-	}
+	for _, domainName := range names {
+		// Test the / default
+		resp, err := http.Get(fmt.Sprintf("https://%s/", domainName))
+		if err != nil {
+			t.Fatal(err)
+		}
 
-	indexResp, err := io.ReadAll(resp.Body)
-	if err != nil {
-		t.Fatal(err)
-	}
+		indexResp, err := io.ReadAll(resp.Body)
+		if err != nil {
+			t.Fatal(err)
+		}
 
-	if indexTxt != string(indexResp) {
-		t.Fatal(makediff(indexTxt, string(indexResp)))
-	} else {
-		t.Log("success GET index.html")
-	}
+		if indexTxt != string(indexResp) {
+			t.Fatal(makediff(indexTxt, string(indexResp)))
+		} else {
+			t.Log("success GET index.html")
+		}
 
-	// Test the /text.txt
-	resp, err = http.Get(fmt.Sprintf("https://%s/test.txt", domainName))
-	if err != nil {
-		t.Fatal(err)
-	}
+		// Test the /text.txt
+		resp, err = http.Get(fmt.Sprintf("https://%s/test.txt", domainName))
+		if err != nil {
+			t.Fatal(err)
+		}
 
-	textResp, err := io.ReadAll(resp.Body)
-	if err != nil {
-		t.Fatal(err)
-	}
+		textResp, err := io.ReadAll(resp.Body)
+		if err != nil {
+			t.Fatal(err)
+		}
 
-	if testTxt != string(textResp) {
-		t.Fatal(makediff(testTxt, string(textResp)))
-	} else {
-		t.Log("success GET test.txt")
+		if testTxt != string(textResp) {
+			t.Fatal(makediff(testTxt, string(textResp)))
+		} else {
+			t.Log("success GET test.txt")
+		}
 	}
 }
 

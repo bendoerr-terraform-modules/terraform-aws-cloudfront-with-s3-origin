@@ -6,7 +6,7 @@ resource "aws_cloudfront_distribution" "site" {
   tags    = module.label_site.tags
 
   price_class         = "PriceClass_100"
-  aliases             = var.cname_aliases
+  aliases             = flatten([[local.default_alias], local.extra_aliases])
   http_version        = "http2"
   default_root_object = var.default_root_object
   is_ipv6_enabled     = true
@@ -35,6 +35,8 @@ resource "aws_cloudfront_distribution" "site" {
 
   viewer_certificate {
     cloudfront_default_certificate = true
+    acm_certificate_arn            = aws_acm_certificate_validation.cert.certificate_arn
+    ssl_support_method             = "sni-only"
   }
 }
 
