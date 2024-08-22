@@ -55,3 +55,13 @@ variable "extra_domain_prefixes" {
   description = "Prefixes for additional custom domains to be associated with the CloudFront distribution."
   nullable    = false
 }
+
+variable "function_associations" {
+  type = set(object({
+    event_type   = string
+    function_arn = string
+  }))
+  default     = []
+  description = "A config block that triggers a lambda function with specific actions (maximum 4)."
+  nullable    = false
+}
