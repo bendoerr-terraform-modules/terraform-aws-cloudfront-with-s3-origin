@@ -40,3 +40,19 @@ data "aws_iam_policy_document" "cloudfront_s3_origin" {
     }
   }
 }
+
+resource "aws_s3_bucket_lifecycle_configuration" "example" {
+  bucket = module.s3_site.s3_bucket_id
+
+  rule {
+    id     = "rule-1"
+    status = "Enabled"
+    transition {
+      storage_class = "ONEZONE_IA"
+      days          = 30
+    }
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 1
+    }
+  }
+}
