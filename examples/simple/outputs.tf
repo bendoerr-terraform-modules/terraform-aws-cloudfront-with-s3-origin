@@ -30,5 +30,5 @@ output "cloudfront_distribution_alias_domain_name" {
 
 output "cloudfront_distribution_extra_domain_names" {
   value       = module.cloudfront_with_s3_origin.cloudfront_distribution_extra_domain_names
-  description = "Any extra domain names provided."
+  description = "List of additional domain names associated with the CloudFront distribution, useful for multi-domain setups."
 }

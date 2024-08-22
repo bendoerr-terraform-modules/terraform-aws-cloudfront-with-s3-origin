@@ -19,7 +19,7 @@ variable "context" {
 variable "name" {
   type        = string
   default     = "site"
-  description = "TODO"
+  description = "The name of the site, used for naming resources and identifiers."
   nullable    = false
 }
 
@@ -52,6 +52,6 @@ variable "domain_zone_id" {
 variable "extra_domain_prefixes" {
   type        = list(string)
   default     = []
-  description = "Custom domains"
+  description = "Prefixes for additional custom domains to be associated with the CloudFront distribution."
   nullable    = false
 }
